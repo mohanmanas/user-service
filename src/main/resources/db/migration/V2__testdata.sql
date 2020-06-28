@@ -1,0 +1,2 @@
+INSERT INTO user (user_id, user_name, dob, email, phone_number) VALUES (200, 'John', '1995-07-03', 'john@gmail.com', 9999996969); 
+INSERT INTO user (user_id, user_name, dob, email, phone_number) VALUES (201, 'Craig', '1997-04-25', 'craig@gmail.com', 7956982639); 
