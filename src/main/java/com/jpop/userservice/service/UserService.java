@@ -1,10 +1,7 @@
-package com.epam.userservice.service;
+package com.jpop.userservice.service;
 
 import java.util.List;
-
-
-
-import com.epam.userservice.model.User;
+import com.jpop.userservice.model.User;
 
 public interface UserService {
 

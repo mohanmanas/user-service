@@ -1,4 +1,4 @@
-package com.epam.userservice.model;
+package com.jpop.userservice.model;
 
 import java.time.LocalDate;
 

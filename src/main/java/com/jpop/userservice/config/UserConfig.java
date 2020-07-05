@@ -1,4 +1,4 @@
-package com.epam.userservice.config;
+package com.jpop.userservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class UserConfig {
     public Docket api() { 
         return new Docket(DocumentationType.SWAGGER_2)  
           .select()                                  
-          .apis(RequestHandlerSelectors.basePackage("com.epam.userservice.controller"))              
+          .apis(RequestHandlerSelectors.basePackage("com.jpop.userservice.controller"))              
           .paths(PathSelectors.any())
           .build()
           .apiInfo(apiEndPointsInfo());                                           

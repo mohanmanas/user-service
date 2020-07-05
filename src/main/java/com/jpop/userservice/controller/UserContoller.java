@@ -1,6 +1,7 @@
-package com.epam.userservice.controller;
+package com.jpop.userservice.controller;
 
 import java.net.URI;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -21,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.epam.userservice.model.User;
-import com.epam.userservice.service.UserService;
+import com.jpop.userservice.model.User;
+import com.jpop.userservice.service.UserService;
 
 @RestController
 @RequestMapping(value="/users")

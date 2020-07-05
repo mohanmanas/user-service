@@ -1,12 +1,8 @@
-package com.epam.userservice.repository;
+package com.jpop.userservice.repository;
 
 import java.util.List;
-
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
-
-import com.epam.userservice.model.User;
+import com.jpop.userservice.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 	

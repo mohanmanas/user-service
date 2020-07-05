@@ -1,6 +1,7 @@
-package com.epam.userservice.service;
+package com.jpop.userservice.service;
 
 import java.util.List;
+
 
 import java.util.Objects;
 import java.util.Optional;
@@ -9,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.epam.userservice.model.User;
-import com.epam.userservice.repository.UserRepository;
+import com.jpop.userservice.model.User;
+import com.jpop.userservice.repository.UserRepository;
 
 
 @Service
