@@ -5,11 +5,14 @@ import java.util.List;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.jpop.userservice.dto.UserDto;
 import com.jpop.userservice.model.User;
 import com.jpop.userservice.repository.UserRepository;
 
@@ -21,24 +24,26 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 
 	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
+	public List<UserDto> getAllUsers() {
+		List<User> usersList = userRepository.findAll();
+		return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
 	}
 	
 	@Override
-	public User getUserById(int id) {
+	public UserDto getUserById(int id) {
 		Optional<User> optionalUser = userRepository.findById(id);
-		return optionalUser.isPresent() ? optionalUser.get(): null ;
+		return optionalUser.isPresent() ? UserDto.toUserDto(optionalUser.get()) : null ;
 	}
 	
 	@Override
-	public List<User> getAllUsersByName(String userName) {
-		return userRepository.findByUserNameContains(userName);
+	public List<UserDto> getAllUsersByName(String userName) {
+		List<User> usersList = userRepository.findByUserNameContains(userName);
+		return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
 	}
 	
 	@Override
-	public User createUser(User user) {
-		return userRepository.save(user);
+	public UserDto createUser(UserDto userDto) {
+		return UserDto.toUserDto(userRepository.save(UserDto.fromUserDto(userDto)));
 	}
 	
 	@Override
@@ -47,21 +52,21 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean updateUser(User user, int id) {
+	public HttpStatus updateUser(UserDto userDto, int id) {
 		Optional<User> optionalUser = userRepository.findById(id);
 		User userEntity = optionalUser.isPresent() ? optionalUser.get() : null;
 		if(Objects.nonNull(userEntity)) {
 			User updatedUser = User.builder()
 					.userId(id)
-					.userName(StringUtils.isEmpty(user.getUserName())?userEntity.getUserName():user.getUserName())
-					.dob(Objects.nonNull(user.getDob())?userEntity.getDob():user.getDob())
-					.email(StringUtils.isEmpty(user.getEmail())?userEntity.getEmail():user.getEmail())
-					.phoneNumber(StringUtils.isEmpty(user.getPhoneNumber())?userEntity.getPhoneNumber():user.getPhoneNumber())
+					.userName(StringUtils.isEmpty(userDto.getUserName())?userEntity.getUserName():userDto.getUserName())
+					.dob(Objects.nonNull(userDto.getDob())?userEntity.getDob():userDto.getDob())
+					.email(StringUtils.isEmpty(userDto.getEmail())?userEntity.getEmail():userDto.getEmail())
+					.phoneNumber(StringUtils.isEmpty(userDto.getPhoneNumber())?userEntity.getPhoneNumber():userDto.getPhoneNumber())
 					.build();
 					userRepository.save(updatedUser);
-					return true;
+					return HttpStatus.CREATED;
 		} else {
-			return false;
+			return HttpStatus.BAD_REQUEST;
 		}
 	}
 }
