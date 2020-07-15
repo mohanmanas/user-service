@@ -17,7 +17,7 @@ public interface UserService {
 
 	public void deleteUser(int id);
 
-	public HttpStatus updateUser(UserDto userDto, int id);
+	public void updateUser(UserDto userDto, int id);
 
 	public List<UserDto> getAllUsersByName(String userName);
 }

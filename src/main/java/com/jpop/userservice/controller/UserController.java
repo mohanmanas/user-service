@@ -1,6 +1,7 @@
 package com.jpop.userservice.controller;
 
 import java.net.URI;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.jpop.userservice.dto.UserDto;
-import com.jpop.userservice.model.User;
 import com.jpop.userservice.service.UserService;
 
 @RestController
@@ -43,10 +43,14 @@ public class UserController {
 	
 	@PostMapping
 	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-		UserDto response = userService.createUser(userDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(response.getUserId()).toUri();
-		return ResponseEntity.created(location).build();
+		try {
+			UserDto response = userService.createUser(userDto);
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+					.buildAndExpand(response.getUserId()).toUri();
+			return ResponseEntity.created(location).build();
+		} catch(Exception exception) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
 	}
 	
 	@DeleteMapping("/{id}")
@@ -57,7 +61,7 @@ public class UserController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable int id) {
-		HttpStatus httpStatus = userService.updateUser(userDto, id);
-		return new ResponseEntity<>(null, httpStatus);
+		userService.updateUser(userDto, id);
+		return ResponseEntity.noContent().build();
 	}
 }

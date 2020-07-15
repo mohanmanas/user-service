@@ -1,18 +1,15 @@
 package com.jpop.userservice.service;
 
 import java.util.List;
-
-
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.jpop.userservice.dto.UserDto;
+import com.jpop.userservice.exception.NoDataFoundException;
+import com.jpop.userservice.exception.UserNotFoundException;
 import com.jpop.userservice.model.User;
 import com.jpop.userservice.repository.UserRepository;
 
@@ -26,24 +23,41 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<UserDto> getAllUsers() {
 		List<User> usersList = userRepository.findAll();
-		return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
+		if(CollectionUtils.isNotEmpty(usersList)) {
+			return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
+		} else {
+			throw new NoDataFoundException();
+		}
 	}
 	
 	@Override
 	public UserDto getUserById(int id) {
 		Optional<User> optionalUser = userRepository.findById(id);
-		return optionalUser.isPresent() ? UserDto.toUserDto(optionalUser.get()) : null ;
+		if(optionalUser.isPresent()) {
+			return UserDto.toUserDto(optionalUser.get());
+		} else {
+			throw new UserNotFoundException(id);
+		}
 	}
 	
 	@Override
 	public List<UserDto> getAllUsersByName(String userName) {
 		List<User> usersList = userRepository.findByUserNameContains(userName);
-		return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
+		if(CollectionUtils.isNotEmpty(usersList)) {
+			return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
+		} else {
+			throw new NoDataFoundException();
+		}
 	}
 	
 	@Override
 	public UserDto createUser(UserDto userDto) {
-		return UserDto.toUserDto(userRepository.save(UserDto.fromUserDto(userDto)));
+		Optional<User> optionalUser = userRepository.findById(userDto.getUserId());
+		if(!optionalUser.isPresent()) {
+			return UserDto.toUserDto(userRepository.save(UserDto.fromUserDto(userDto)));
+		} else {
+			throw new RuntimeException();
+		}
 	}
 	
 	@Override
@@ -52,21 +66,12 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public HttpStatus updateUser(UserDto userDto, int id) {
+	public void updateUser(UserDto userDto, int id) {
 		Optional<User> optionalUser = userRepository.findById(id);
-		User userEntity = optionalUser.isPresent() ? optionalUser.get() : null;
-		if(Objects.nonNull(userEntity)) {
-			User updatedUser = User.builder()
-					.userId(id)
-					.userName(StringUtils.isEmpty(userDto.getUserName())?userEntity.getUserName():userDto.getUserName())
-					.dob(Objects.nonNull(userDto.getDob())?userEntity.getDob():userDto.getDob())
-					.email(StringUtils.isEmpty(userDto.getEmail())?userEntity.getEmail():userDto.getEmail())
-					.phoneNumber(StringUtils.isEmpty(userDto.getPhoneNumber())?userEntity.getPhoneNumber():userDto.getPhoneNumber())
-					.build();
-					userRepository.save(updatedUser);
-					return HttpStatus.CREATED;
+		if(optionalUser.isPresent()) {
+			userRepository.save(UserDto.fromUserDto(userDto));
 		} else {
-			return HttpStatus.BAD_REQUEST;
+			throw new UserNotFoundException(id);
 		}
 	}
 }
