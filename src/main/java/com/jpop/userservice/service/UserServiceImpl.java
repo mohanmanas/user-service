@@ -1,12 +1,13 @@
 package com.jpop.userservice.service;
 
 import java.util.List;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.jpop.userservice.dto.UserDto;
 import com.jpop.userservice.exception.NoDataFoundException;
 import com.jpop.userservice.exception.UserNotFoundException;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<UserDto> getAllUsers() {
 		List<User> usersList = userRepository.findAll();
-		if(CollectionUtils.isNotEmpty(usersList)) {
+		if(!CollectionUtils.isEmpty(usersList)) {
 			return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
 		} else {
 			throw new NoDataFoundException();
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<UserDto> getAllUsersByName(String userName) {
 		List<User> usersList = userRepository.findByUserNameContains(userName);
-		if(CollectionUtils.isNotEmpty(usersList)) {
+		if(!CollectionUtils.isEmpty(usersList)) {
 			return usersList.stream().map(UserDto::toUserDto).collect(Collectors.toList());
 		} else {
 			throw new NoDataFoundException();
