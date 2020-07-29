@@ -1,5 +1,6 @@
 package com.jpop.userservice.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -34,6 +35,8 @@ public class User {
 	private String email;
 	
 	private String phoneNumber;
+	
+	private BigDecimal amountDue;
 	
 	@CreatedBy
 	private String createdUser;

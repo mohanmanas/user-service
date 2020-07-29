@@ -1,5 +1,6 @@
 package com.jpop.userservice.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.jpop.userservice.model.User;
 
@@ -22,6 +23,8 @@ public class UserDto {
 	
 	private String phoneNumber;
 	
+	private BigDecimal amountDue;
+	
 	public static UserDto toUserDto(User user) {
 		return UserDto.builder()
 				.userId(user.getUserId())
@@ -29,6 +32,7 @@ public class UserDto {
 				.dob(user.getDob())
 				.email(user.getEmail())
 				.phoneNumber(user.getPhoneNumber())
+				.amountDue(user.getAmountDue())
 				.build();
 	}
 	
@@ -39,6 +43,7 @@ public class UserDto {
 				.dob(userDto.getDob())
 				.email(userDto.getEmail())
 				.phoneNumber(userDto.getPhoneNumber())
+				.amountDue(userDto.getAmountDue())
 				.build();
 	}
 }
